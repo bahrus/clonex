@@ -1,0 +1,20 @@
+{
+  "name": "clonex",
+  "version": "0.0.0",
+  "description": "optimal template cloning",
+  "homepage": "https://github.com/bahrus/clonex#readme",
+  "bugs": {
+    "url": "https://github.com/bahrus/clonex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahrus/clonex.git"
+  },
+  "license": "MIT",
+  "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
+  "type": "module",
+  "main": "clone.js",
+  "scripts": {
+    "test": "playwright test"
+  }
+}
