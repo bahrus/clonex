@@ -26,7 +26,7 @@ interface SpawnMapping {
 interface SpawnRoot {
     //key is the index of the node
     [key: number] : SpawnMapping[],
-    spawnCallback?: (el: Element, instance: Disposable, spawnInfo: ) => void;
+    spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
 }
 
 ```
