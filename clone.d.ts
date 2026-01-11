@@ -1,0 +1,48 @@
+/**
+ * Interface for spawn information
+ */
+export interface SpawnInfo {}
+
+/**
+ * Constructor for a class that can be spawned
+ */
+export interface SpawnConstructor {
+    new (el: Element, info: SpawnInfo, initVals?: unknown): Disposable;
+}
+
+/**
+ * Interface for objects with a dispose method
+ */
+export interface Disposable {
+    dispose(el: Element, info: SpawnInfo): void;
+}
+
+/**
+ * Mapping for spawning classes to specific nodes and their children
+ */
+export interface SpawnMapping {
+    spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
+    spawnInfo: SpawnInfo;
+    // Child node mappings indexed by node position
+    [key: number]: SpawnMapping[];
+}
+
+/**
+ * Root configuration for spawning
+ */
+export interface SpawnRoot {
+    // Root node mappings indexed by node position
+    [key: number]: SpawnMapping[];
+    spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
+}
+
+/**
+ * Spawns class instances tied to a cloned DOM fragment based on a mapping
+ * @param clone - The cloned DOM fragment
+ * @param options - The spawn mapping and configuration
+ * @returns A nested WeakMap for tracking instances
+ */
+export declare function spawnAll(
+    clone: DocumentFragment,
+    options: SpawnRoot
+): Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>;
