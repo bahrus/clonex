@@ -1,5 +1,5 @@
 //@ts-check
-/** @import {SpawnRoot, SpawnInfo, Disposable} from "./spawnAll.d.ts" */
+/** @import {SpawnRoot, SpawnInfo, Disposable, SpawnMapping} from "./spawnAll.d.ts" */
 
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
@@ -37,7 +37,12 @@ export async function spawnAll(clone, options) {
     // Get all nodes in the fragment
     const nodes = getNodeArray(clone);
 
-    // Process spawn mappings
+    /**
+     * Process spawn mappings
+     * @param {SpawnMapping[]} mappings 
+     * @param {number} nodeIndex 
+     * @returns 
+     */
     async function processMapping(mappings, nodeIndex) {
         if (!mappings || !Array.isArray(mappings)) {
             return;
