@@ -1,15 +1,27 @@
+//@ts-check
+/** @import {SpawnRoot, SpawnInfo, Disposable} from "./spawnAll.d.ts" */
+
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
  * @param {DocumentFragment} clone - The cloned DOM fragment
  * @param {SpawnRoot} options - The spawn mapping and configuration
- * @returns {WeakMap<Element, WeakMap<SpawnInfo, Disposable>>} A nested WeakMap for tracking instances
+ * @returns {Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>} A nested WeakMap for tracking instances
  */
 export async function spawnAll(clone, options) {
     const elementToInfoMap = new WeakMap();
 
-    // Helper function to get all nodes in a flat array (pre-order traversal)
+    /**
+     * Helper function to get all nodes in a flat array (pre-order traversal)
+     * @param {DocumentFragment} node 
+     * @returns 
+     */
     function getNodeArray(node) {
+        /** @type {Node[]} */
         const nodes = [];
+        /**
+         * 
+         * @param {Node} n 
+         */
         function traverse(n) {
             nodes.push(n);
             for (let child of n.childNodes) {
@@ -35,7 +47,7 @@ export async function spawnAll(clone, options) {
             if (!mapping) continue;
 
             const element = nodes[nodeIndex];
-            if (!element || element.nodeType !== Node.ELEMENT_NODE) {
+            if (!element || !(element instanceof Element)) {
                 continue;
             }
 
