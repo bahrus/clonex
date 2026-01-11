@@ -1,14 +1,14 @@
 {
-  "name": "instance-of",
+  "name": "spawning",
   "version": "0.0.0",
   "description": "optimal template cloning",
-  "homepage": "https://github.com/bahrus/instance-of#readme",
+  "homepage": "https://github.com/bahrus/spawning#readme",
   "bugs": {
-    "url": "https://github.com/bahrus/instance-of/issues"
+    "url": "https://github.com/bahrus/spawning/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bahrus/instance-of.git"
+    "url": "git+https://github.com/bahrus/spawning.git"
   },
   "license": "MIT",
   "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
