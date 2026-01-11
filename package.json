@@ -6,6 +6,10 @@
   "bugs": {
     "url": "https://github.com/bahrus/spawning/issues"
   },
+  "devDependencies": {
+    "spa-ssi": "0.0.26",
+    "@playwright/test": "1.57.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/spawning.git"
@@ -15,6 +19,9 @@
   "type": "module",
   "main": "spawnAll.js",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "serve": "node ./node_modules/spa-ssi/serve.js",
+    "safari": "npx playwright wk http://localhost:8000",
+    "update": "ncu -u && npm install"
   }
 }
