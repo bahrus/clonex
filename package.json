@@ -1,14 +1,14 @@
 {
-  "name": "clonex",
+  "name": "instance-of",
   "version": "0.0.0",
   "description": "optimal template cloning",
-  "homepage": "https://github.com/bahrus/clonex#readme",
+  "homepage": "https://github.com/bahrus/instance-of#readme",
   "bugs": {
-    "url": "https://github.com/bahrus/clonex/issues"
+    "url": "https://github.com/bahrus/instance-of/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bahrus/clonex.git"
+    "url": "git+https://github.com/bahrus/instance-of.git"
   },
   "license": "MIT",
   "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
