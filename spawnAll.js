@@ -1,5 +1,5 @@
 //@ts-check
-/** @import {SpawnRoot, SpawnInfo, Disposable, SpawnMapping} from "./spawnAll.d.ts" */
+/** @import {SpawnRoot, SpawnInfo, Disposable, SpawnMapping, SpawnConstructor} from "./spawnAll.d.ts" */
 
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
@@ -59,12 +59,12 @@ export async function spawnAll(clone, options) {
             // Get the spawn constructor
             let spawnConstructor = mapping.spawn;
             if (typeof spawnConstructor === 'function' && spawnConstructor.constructor.name === 'AsyncFunction') {
-                spawnConstructor = await spawnConstructor();
+                spawnConstructor = await /** @type {() => Promise<SpawnConstructor>} */ (spawnConstructor)();
             }
 
             // Instantiate the class
-            if (spawnConstructor && typeof spawnConstructor === 'function') {
-                const instance = new spawnConstructor(element, mapping.spawnInfo);
+            if (typeof spawnConstructor === 'function') {
+                const instance = new /** @type {SpawnConstructor} */ (spawnConstructor)(element, mapping.spawnInfo);
 
                 // Store the instance in the nested WeakMap
                 if (!elementToInfoMap.has(element)) {
