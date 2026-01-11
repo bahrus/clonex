@@ -6,29 +6,32 @@ The mapping structure looks as follows:
 
 ```TypeScript
 
+interface SpawnInfo {}
+
 interface SpawnConstructor {
-    new (el: Element, info: SpawnMapping, initVals?: unknown): Disposable;
+    new (el: Element, info: SpawnInfo, initVals?: unknown): Disposable;
 }
 
 interface Disposable {
-    dispose(el: Element, info: SpawnMapping);
+    dispose(el: Element, info: SpawnInfo);
 }
 
 interface SpawnMapping {
     spawn: SpawnConstructor | () => Promise<SpawnConstructor>
+    spawnInfo: SpawnInfo
     //key is the index of the node
-    [key: number] : SpawnMapping
+    [key: number] : SpawnMapping[]
 }
 
 interface SpawnRoot {
     //key is the index of the node
-    [key: number] : SpawnMapping,
+    [key: number] : SpawnMapping[],
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: ) => void;
 }
 
 ```
 
-This package contains a public function :
+This package contains a public function spawnAll:
 
 ```TypeScript
 const template = document.createElement('template');
@@ -38,5 +41,5 @@ const clone = template.cloneNode(true);
 
 
 
-async function spawnAll(clone: DOMFragment, options: SpawnRoot);
+async function spawnAll(clone: DOMFragment, options: SpawnRoot): WeakMap<Element, WeakMap<SpawnInfo, Disposable>>;
 ```
