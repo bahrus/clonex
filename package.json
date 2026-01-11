@@ -13,7 +13,7 @@
   "license": "MIT",
   "author": "Bruce B. Anderson <anderson.bruce.b@gmail.com>",
   "type": "module",
-  "main": "clone.js",
+  "main": "spawnAll.js",
   "scripts": {
     "test": "playwright test"
   }
