@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id=target></div>
+    <script type=module>
+        import {spawnAll} from '../spawnAll.js';
+        // Define a test class
+        class TestSpawn {
+            constructor(el, info) {
+                this.el = el;
+                this.info = info;
+                el.textContent = 'Spawned!';
+            }
+            dispose(el, info) {
+                el.textContent = '';
+            }
+        }
+        const template = document.createElement('template');
+        template.innerHTML = '<div class="spawned"></div>';
+        const clone = template.content.cloneNode(true);
+
+        // Define spawn mapping
+        const options = {
+            0: [{
+                spawn: TestSpawn,
+                spawnInfo: { data: 'test' }
+            }]
+        };
+        const instanceMap = await spawnAll(clone, options);
+        console.log({instanceMap});
+        if(clone.childNodes[0]?.textContent === 'Spawned!'){
+            target.setAttribute('mark', 'good');
+        }
+        // if(clone.childNodes[0]?.textContent)
+        //     return {
+        //         success: instanceMap instanceof WeakMap,
+        //         childCount: clone.childNodes.length,
+        //         childText: clone.childNodes[0]?.textContent
+        //     };
+    </script>
+</body>
+</html>

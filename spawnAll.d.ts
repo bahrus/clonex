@@ -1,3 +1,26 @@
+// export interface TreeNode {
+//     children: TreeNode[];
+//     element: Element;
+// }
+
+// export interface RootNode {
+//     children: TreeNode[];
+// }
+
+export interface ElementXSynchronousSpawnInfo {
+    element: Element;
+    spawn: SpawnConstructor
+    spawnInfo: SpawnInfo;
+    initVals?: unknown;   
+}
+
+export interface ElementXAsynchronousSpawnInfo {
+    element: Element;
+    spawn: () => Promise<SpawnConstructor>;
+    spawnInfo: SpawnInfo;
+    initVals?: unknown;
+}
+
 /**
  * Interface for spawn information
  */
@@ -23,6 +46,7 @@ export interface Disposable {
 export interface SpawnMapping {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
+    initVals?: unknown;
     // Child node mappings indexed by node position
     [key: number]: SpawnMapping[];
 }

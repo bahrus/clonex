@@ -19,6 +19,7 @@ interface Disposable {
 interface SpawnMapping {
     spawn: SpawnConstructor | () => Promise<SpawnConstructor>
     spawnInfo: SpawnInfo
+    initVals: unknown
     //key is the index of the node
     [key: number] : SpawnMapping[]
 }
