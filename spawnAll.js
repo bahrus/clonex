@@ -47,6 +47,7 @@ export function spawnSynchronous(clone, options) {
     const elementToInfoMap = new Map();
     for (const elXSpawnInfo of synchronousSpawns) {
         const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
+        //kind of silly, maybe should skip
         const spawnConstructor =  spawn;
         const instance = new spawnConstructor(element, spawnInfo, initVals);
         const infoMap = elementToInfoMap.get(element) || new WeakMap();
@@ -67,8 +68,8 @@ export async function spawnAsynchronous(clone, options) {
     const elementToInfoMap = new Map();
     for (const elXSpawnInfo of asynchronousSpawns) {
         const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
+        //kind of silly, maybe should skip
          const spawnConstructor =  spawn;
-        //const spawnConstructor = new spawn(element, spawnInfo, initVals);
         const instance = new spawnConstructor(element, spawnInfo, initVals);
         const infoMap = elementToInfoMap.get(element) || new WeakMap();
         infoMap.set(spawnInfo, instance);
