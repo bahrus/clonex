@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nested Asynchronous Nodes</title>
+</head>
+<body>
+    <div id=root></div>
+    <div id=target></div>
+    <script type=module>
+        import {spawnAll} from '../spawnAll.js';
+
+        const template = document.createElement('template');
+        template.innerHTML = '<div class="spawned"><section></section><span id=span></span></div>';
+        const clone = template.content.cloneNode(true);
+
+        // Define spawn mapping
+        const options = {
+            0: [{
+                spawn: async () => {
+                    const { ParentSpawn } = await import('./ParentSpawn.js');
+                    return ParentSpawn;
+                },
+                spawnInfo: { role: 'parent' },
+                1: [{
+                    spawn: async () => {
+                        const { ChildSpawn } = await import('./ChildSpawn.js');
+                        return ChildSpawn;
+                    },
+                    spawnInfo: { role: 'child' }
+                }]
+            }]
+        };
+        const instanceMap = await spawnAll(clone, options);
+        console.log({instanceMap});
+        if(clone.querySelector('div')?.dataset.parent === 'yes' &&
+           clone.querySelector('section')?.textContent === 'Child'){
+            target.setAttribute('mark', 'good');
+        }
+        root.appendChild(clone);
+    </script>
+</body>
+</html>
