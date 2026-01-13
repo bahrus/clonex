@@ -133,7 +133,7 @@ function processNodeForSynchronousSpawns(node, keyToSpawnMappings, accumulator, 
  * @param {SSI | undefined} ssi
  * 
  */
-async function processNodeForASynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
+async function processNodeForAsynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
         const {spawn, spawnInfo, initVals} = ssi;
         if(typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction'){
@@ -152,7 +152,7 @@ async function processNodeForASynchronousSpawns(node, keyToSpawnMappings, accumu
         const childNode = node.childNodes[index];
         for(const mapping of mappings){
             const {ssi, keyToSpawnMappings} = partitionMappings(mapping);
-            processNodeForSynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
+            processNodeForAsynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
         }
     }
 }
@@ -180,6 +180,6 @@ function getSynchronousSpawns(clone, options){
 async function getAsynchronousSpawns(clone, options){
     /** @type {ElementXAsynchronousSpawnInfo[]} */
     const returnObject = [];
-    await processNodeForASynchronousSpawns(clone, options, returnObject, undefined);
+    await processNodeForAsynchronousSpawns(clone, options, returnObject, undefined);
     return returnObject;
 }
