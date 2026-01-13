@@ -104,11 +104,47 @@ function partitionMappings(mapping){
  */
 function processNodeForSynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
-        accumulator.push({
-            element: node,
-            spawn: /** @type {SpawnConstructor} */ (ssi.spawn),
-            spawnInfo: ssi.spawnInfo,
-        });
+        const {spawn, spawnInfo, initVals} = ssi;
+        if(typeof spawn === 'function' && spawn.constructor.name !== 'AsyncFunction'){
+            accumulator.push({
+                element: node,
+                spawn: /** @type {SpawnConstructor} */ (spawn),
+                spawnInfo: ssi.spawnInfo,
+                initVals: ssi.initVals,
+            });
+        }
+    }
+    for(const key in keyToSpawnMappings){
+        const index = parseInt(key); //is this necessary?
+        const mappings = keyToSpawnMappings[key];
+        const childNode = node.children[index];
+        for(const mapping of mappings){
+            const {ssi, keyToSpawnMappings} = partitionMappings(mapping);
+            processNodeForSynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
+        }
+    }
+}
+
+/**
+ * 
+ * @param {DocumentFragment | Element} node 
+ * @param {{[key: number]: SpawnMapping[]}} keyToSpawnMappings 
+ * @param {ElementXAsynchronousSpawnInfo[]} accumulator
+ * @param {SSI | undefined} ssi
+ * 
+ */
+async function processNodeForASynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
+    if(ssi !== undefined && node instanceof Element){
+        const {spawn, spawnInfo, initVals} = ssi;
+        if(typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction'){
+            const asyncSpawn = await spawn();
+            accumulator.push({
+                element: node,
+                spawn: /** @type {SpawnConstructor} */ (asyncSpawn),
+                spawnInfo: ssi.spawnInfo,
+                initVals: ssi.initVals,
+            });
+        }
     }
     for(const key in keyToSpawnMappings){
         const index = parseInt(key); //is this necessary?
@@ -141,5 +177,9 @@ function getSynchronousSpawns(clone, options){
  * @param {SpawnRoot} options 
  * @returns {ElementXAsynchronousSpawnInfo[]} 
  */
-function getAsynchronousSpawns(clone, options){
+async function getAsynchronousSpawns(clone, options){
+    /** @type {ElementXAsynchronousSpawnInfo[]} */
+    const returnObject = [];
+    await processNodeForASynchronousSpawns(clone, options, returnObject, undefined);
+    return returnObject;
 }
