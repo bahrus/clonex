@@ -67,7 +67,8 @@ export async function spawnAsynchronous(clone, options) {
     const elementToInfoMap = new Map();
     for (const elXSpawnInfo of asynchronousSpawns) {
         const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
-        const spawnConstructor = await spawn();
+         const spawnConstructor =  spawn;
+        //const spawnConstructor = new spawn(element, spawnInfo, initVals);
         const instance = new spawnConstructor(element, spawnInfo, initVals);
         const infoMap = elementToInfoMap.get(element) || new WeakMap();
         infoMap.set(spawnInfo, instance);
@@ -151,7 +152,7 @@ async function processNodeForAsynchronousSpawns(node, keyToSpawnMappings, accumu
         const childNode = node.childNodes[index];
         for(const mapping of mappings){
             const {ssi, keyToSpawnMappings} = partitionMappings(mapping);
-            processNodeForAsynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
+            await processNodeForAsynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
         }
     }
 }
