@@ -40,13 +40,16 @@ export interface Disposable {
     dispose(el: Element, info: SpawnInfo): void;
 }
 
-/**
- * Mapping for spawning classes to specific nodes and their children
- */
-export interface SpawnMapping {
+export interface SSI {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
+}
+
+/**
+ * Mapping for spawning classes to specific nodes and their children
+ */
+export interface SpawnMapping extends SSI {
     // Child node mappings indexed by node position
     [key: number]: SpawnMapping[];
 }
