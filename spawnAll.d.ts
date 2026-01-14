@@ -19,7 +19,9 @@ export interface ElementXAsynchronousSpawnInfo {
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
  */
-interface SpawnInfo {}
+interface SpawnInfo {
+    spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
+}
 
 /**
  * Constructor for a class that can be spawned
@@ -40,7 +42,6 @@ interface Disposable {
  * Spawn configuration
  */
 interface SSI {
-    spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
     nodes?: NodeSSI[];

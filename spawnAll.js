@@ -69,7 +69,7 @@ export async function spawnAsynchronous(clone, options) {
     for (const elXSpawnInfo of asynchronousSpawns) {
         const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
         //kind of silly, maybe should skip
-         const spawnConstructor =  spawn;
+        const spawnConstructor =  spawn;
         const instance = new spawnConstructor(element, spawnInfo, initVals);
         const infoMap = elementToInfoMap.get(element) || new WeakMap();
         infoMap.set(spawnInfo, instance);
@@ -105,13 +105,14 @@ export async function spawnAsynchronous(clone, options) {
  */
 function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
-        const {spawn, spawnInfo, initVals} = ssi;
+        const {spawnInfo, initVals} = ssi;
+        const {spawn} = spawnInfo;
         if(typeof spawn === 'function' && spawn.constructor.name !== 'AsyncFunction'){
             accumulator.push({
                 element: node,
                 spawn: /** @type {SpawnConstructor} */ (spawn),
-                spawnInfo: ssi.spawnInfo,
-                initVals: ssi.initVals,
+                spawnInfo: spawnInfo,
+                initVals: initVals,
             });
         }
     }
@@ -134,14 +135,15 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
  */
 async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
-        const {spawn, spawnInfo, initVals} = ssi;
+        const {spawnInfo, initVals} = ssi;
+        const {spawn} = spawnInfo;
         if(typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction'){
             const asyncSpawn = await spawn();
             accumulator.push({
                 element: node,
                 spawn: /** @type {SpawnConstructor} */ (asyncSpawn),
-                spawnInfo: ssi.spawnInfo,
-                initVals: ssi.initVals,
+                spawnInfo: spawnInfo,
+                initVals: initVals,
             });
         }
     }
