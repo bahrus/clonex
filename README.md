@@ -115,3 +115,5 @@ async function spawnAsynchronous(
 **spawnSynchronous**: Processes only synchronous spawn constructors from the mapping. Returns a Map (not WeakMap) for tracking instances. Useful when you need to handle sync spawns separately before async operations.
 
 **spawnAsynchronous**: Processes only asynchronous spawn constructors (functions that return Promise<SpawnConstructor>). Returns a promise that resolves to a Map (not WeakMap) for tracking instances. Useful when you need to handle async spawns separately.
+
+//TODO:  implement spawnCallback

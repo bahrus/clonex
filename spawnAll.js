@@ -1,13 +1,5 @@
 //@ts-check
-/** @import {
- * SpawnRoot, 
- * SpawnInfo, 
- * Disposable, 
- * SpawnConstructor,
- * NodeSSI,
- * ElementXSynchronousSpawnInfo,
- * SSI
- * } from "./spawnAll.d.ts" */
+/** @import { SpawnRoot, SpawnInfo, Disposable, SpawnConstructor, NxSIN, ElementXSynchronousSpawnInfo, SIN} from "./types.d.ts" */
 
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
@@ -77,29 +69,12 @@ export async function spawnAsynchronous(clone, options) {
     return elementToInfoMap;
 }
 
-// /**
-//  * 
-//  * @param {SpawnMapping} mapping 
-//  */
-// function partitionMappings(mapping){
-//     const ssi = {};
-//     const keyToSpawnMappings = {};
-//     for(const key in mapping){
-//         if(typeof key === 'number'){
-//             keyToSpawnMappings[key] = mapping[key];
-//         }else{
-//             ssi[key] = mapping[key];
-//         }
-//     }
-//     return {ssi, keyToSpawnMappings};
-// }
-
 /**
  * 
  * @param {DocumentFragment | Element} node 
- * @param {NodeSSI[] | undefined} nodeMappings 
+ * @param {NxSIN[] | undefined} nodeMappings 
  * @param {ElementXSynchronousSpawnInfo[]} accumulator
- * @param {SSI | undefined} ssi
+ * @param {SIN | undefined} ssi
  * 
  */
 function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
@@ -127,9 +102,9 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
 /**
  * 
  * @param {DocumentFragment | Element} node 
- * @param {NodeSSI[] | undefined} nodeMappings 
+ * @param {NxSIN[] | undefined} nodeMappings 
  * @param {ElementXSynchronousSpawnInfo[]} accumulator
- * @param {SSI | undefined} ssi
+ * @param {SIN | undefined} ssi
  * 
  */
 async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator, ssi ){

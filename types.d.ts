@@ -1,4 +1,3 @@
-
 /**
  * Internally used interface for tracking spawn information tied to an element
  */
@@ -16,14 +15,14 @@ export interface ElementXSynchronousSpawnInfo {
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
  */
-interface SpawnInfo {
+export interface SpawnInfo {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
 }
 
 /**
  * Constructor for a class that can be spawned
  */
-interface SpawnConstructor<TSpawnKey = SpawnInfo> {
+export interface SpawnConstructor<TSpawnKey = SpawnInfo> {
     new (el: Element, info: TSpawnKey, initVals?: unknown): Disposable;
 }
 
@@ -31,40 +30,40 @@ interface SpawnConstructor<TSpawnKey = SpawnInfo> {
  * Interface for classes that can be spawned.  Assumed to have a dispose method
  * (but this package doesn't require or call such a method)
  */
-interface Disposable {
+export interface Disposable {
     dispose(el: Element, info: SpawnInfo): void;
 }
 
 /**
  * Spawn configuration
  */
-interface SSI {
+export interface SIN {
     spawnInfo: SpawnInfo;
     initVals?: unknown;
-    nodes?: NodeSSI[];
+    nodes?: NxSIN[];
 }
 
 /**
  * Tuple mapping a node index to its spawn configuration
  */
-type NodeSSI = [number, SSI];
+export type NxSIN = [number, SIN];
 
 /**
  * Root configuration for spawning
  */
 interface SpawnRoot {
     // Array of node mappings as tuples [index, configuration]
-    nodes: NodeSSI[];
+    nodes: NxSIN[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
 }
 
-/**
- * Spawns class instances tied to a cloned DOM fragment based on a mapping
- * @param clone - The cloned DOM fragment
- * @param options - The spawn mapping and configuration
- * @returns A nested WeakMap for tracking instances
- */
-export declare function spawnAll(
-    clone: DocumentFragment,
-    options: SpawnRoot
-): Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>;
+// /**
+//  * Spawns class instances tied to a cloned DOM fragment based on a mapping
+//  * @param clone - The cloned DOM fragment
+//  * @param options - The spawn mapping and configuration
+//  * @returns A nested WeakMap for tracking instances
+//  */
+// export declare function spawnAll(
+//     clone: DocumentFragment,
+//     options: SpawnRoot
+// ): Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>;
