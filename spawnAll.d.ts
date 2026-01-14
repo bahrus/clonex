@@ -6,12 +6,6 @@ export interface ElementXSynchronousSpawnInfo {
     initVals?: unknown;   
 }
 
-export interface ElementXAsynchronousSpawnInfo {
-    element: Element;
-    spawn: SpawnConstructor;
-    spawnInfo: SpawnInfo;
-    initVals?: unknown;
-}
 
 /**
  * Interface for spawn information

@@ -6,7 +6,6 @@
  * SpawnConstructor,
  * NodeSSI,
  * ElementXSynchronousSpawnInfo,
- * ElementXAsynchronousSpawnInfo,
  * SSI
  * } from "./spawnAll.d.ts" */
 
@@ -129,7 +128,7 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
  * 
  * @param {DocumentFragment | Element} node 
  * @param {NodeSSI[] | undefined} nodeMappings 
- * @param {ElementXAsynchronousSpawnInfo[]} accumulator
+ * @param {ElementXSynchronousSpawnInfo[]} accumulator
  * @param {SSI | undefined} ssi
  * 
  */
@@ -176,10 +175,10 @@ function getSynchronousSpawns(clone, options){
  * 
  * @param {DocumentFragment} clone 
  * @param {SpawnRoot} options 
- * @returns {Promise<ElementXAsynchronousSpawnInfo[]>} 
+ * @returns {Promise<ElementXSynchronousSpawnInfo[]>} 
  */
 async function getAsynchronousSpawns(clone, options){
-    /** @type {ElementXAsynchronousSpawnInfo[]} */
+    /** @type {ElementXSynchronousSpawnInfo[]} */
     const accumulator = [];
     const {nodes} = options;
     await processNodeForAsynchronousSpawns(clone, nodes, accumulator, undefined);
