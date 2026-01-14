@@ -51,10 +51,14 @@ export type NxSIN = [number, SIN];
 /**
  * Root configuration for spawning
  */
-interface SpawnRoot {
+export interface SpawnRoot {
     // Array of node mappings as tuples [index, configuration]
     nodes: NxSIN[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
+    /**
+     * Optional debounce interval in milliseconds for node change of nodes before returning the instance map
+     */
+    mutationDebounceInterval?: number;
 }
 
 // /**
