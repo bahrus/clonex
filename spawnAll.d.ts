@@ -24,8 +24,8 @@ interface SpawnInfo {}
 /**
  * Constructor for a class that can be spawned
  */
-interface SpawnConstructor {
-    new (el: Element, info: SpawnInfo, initVals?: unknown): Disposable;
+interface SpawnConstructor<TSpawnKey = SpawnInfo> {
+    new (el: Element, info: TSpawnKey, initVals?: unknown): Disposable;
 }
 
 /**
