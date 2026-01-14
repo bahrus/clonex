@@ -8,7 +8,7 @@ export interface ElementXSynchronousSpawnInfo {
 
 export interface ElementXAsynchronousSpawnInfo {
     element: Element;
-    spawn: () => Promise<SpawnConstructor>;
+    spawn: SpawnConstructor;
     spawnInfo: SpawnInfo;
     initVals?: unknown;
 }
