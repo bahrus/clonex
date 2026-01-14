@@ -17,11 +17,12 @@
         // Define spawn mapping
         const options = {
             nodes: [[0, {
-                spawn: async () => {
-                    const { TestSpawn } = await import('./TestSpawn.js');
-                    return TestSpawn;
-                },
-                spawnInfo: { data: 'test' }
+                spawnInfo: { 
+                    spawn: async () => {
+                        const { TestSpawn } = await import('./TestSpawn.js');
+                        return TestSpawn;
+                    }, 
+                }
             }]]
         };
         const instanceMap = await spawnAll(clone, options);
