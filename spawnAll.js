@@ -5,6 +5,7 @@
  * Disposable, 
  * SpawnMapping, 
  * SpawnConstructor,
+ * NodeSSI,
  * ElementXSynchronousSpawnInfo,
  * ElementXAsynchronousSpawnInfo,
  * SSI
@@ -78,32 +79,32 @@ export async function spawnAsynchronous(clone, options) {
     return elementToInfoMap;
 }
 
-/**
- * 
- * @param {SpawnMapping} mapping 
- */
-function partitionMappings(mapping){
-    const ssi = {};
-    const keyToSpawnMappings = {};
-    for(const key in mapping){
-        if(typeof key === 'number'){
-            keyToSpawnMappings[key] = mapping[key];
-        }else{
-            ssi[key] = mapping[key];
-        }
-    }
-    return {ssi, keyToSpawnMappings};
-}
+// /**
+//  * 
+//  * @param {SpawnMapping} mapping 
+//  */
+// function partitionMappings(mapping){
+//     const ssi = {};
+//     const keyToSpawnMappings = {};
+//     for(const key in mapping){
+//         if(typeof key === 'number'){
+//             keyToSpawnMappings[key] = mapping[key];
+//         }else{
+//             ssi[key] = mapping[key];
+//         }
+//     }
+//     return {ssi, keyToSpawnMappings};
+// }
 
 /**
  * 
  * @param {DocumentFragment | Element} node 
- * @param {{[key: number]: SpawnMapping[]}} keyToSpawnMappings 
+ * @param {NodeSSI[] | undefined} nodeMappings 
  * @param {ElementXSynchronousSpawnInfo[]} accumulator
  * @param {SSI | undefined} ssi
  * 
  */
-function processNodeForSynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
+function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
         const {spawn, spawnInfo, initVals} = ssi;
         if(typeof spawn === 'function' && spawn.constructor.name !== 'AsyncFunction'){
@@ -115,21 +116,19 @@ function processNodeForSynchronousSpawns(node, keyToSpawnMappings, accumulator, 
             });
         }
     }
-    for(const key in keyToSpawnMappings){
-        const index = parseInt(key); //is this necessary?
-        const mappings = keyToSpawnMappings[key];
+    if(nodeMappings === undefined) return;
+    for(const nodeMapping of nodeMappings){
+        const [index, ssi] = nodeMapping;
+        const {nodes} = ssi;
         const childNode = node.children[index];
-        for(const mapping of mappings){
-            const {ssi, keyToSpawnMappings} = partitionMappings(mapping);
-            processNodeForSynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
-        }
+        processNodeForSynchronousSpawns(childNode, nodes, accumulator, ssi);
     }
 }
 
 /**
  * 
  * @param {DocumentFragment | Element} node 
- * @param {{[key: number]: SpawnMapping[]}} keyToSpawnMappings 
+ * @param {NodeSSI[]} keyToSpawnMappings 
  * @param {ElementXAsynchronousSpawnInfo[]} accumulator
  * @param {SSI | undefined} ssi
  * 
@@ -167,9 +166,10 @@ async function processNodeForAsynchronousSpawns(node, keyToSpawnMappings, accumu
  */
 function getSynchronousSpawns(clone, options){
     /** @type {ElementXSynchronousSpawnInfo[]} */
-    const returnObject = [];
-    processNodeForSynchronousSpawns(clone, options, returnObject, undefined);
-    return returnObject;
+    const accumulator = [];
+    const {nodes} = options;
+    processNodeForSynchronousSpawns(clone, nodes, accumulator, undefined);
+    return accumulator;
 }
 
 /**
@@ -180,7 +180,8 @@ function getSynchronousSpawns(clone, options){
  */
 async function getAsynchronousSpawns(clone, options){
     /** @type {ElementXAsynchronousSpawnInfo[]} */
-    const returnObject = [];
-    await processNodeForAsynchronousSpawns(clone, options, returnObject, undefined);
-    return returnObject;
+    const accumulator = [];
+    const {nodes} = options;
+    //await processNodeForAsynchronousSpawns(clone, nodes, accumulator, undefined);
+    return accumulator;
 }

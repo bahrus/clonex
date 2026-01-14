@@ -44,7 +44,10 @@ export interface SSI {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
+    nodes?: NodeSSI[];
 }
+
+export type NodeSSI = [number, SSI];
 
 /**
  * Mapping for spawning classes to specific nodes and their children
@@ -59,7 +62,7 @@ export interface SpawnMapping extends SSI {
  */
 export interface SpawnRoot {
     // Root node mappings indexed by node position
-    [key: number]: SpawnMapping[];
+    nodes: NodeSSI[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
 }
 

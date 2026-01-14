@@ -26,10 +26,7 @@
 
         // Define spawn mapping
         const options = {
-            0: [{
-                spawn: TestSpawn,
-                spawnInfo: { data: 'test' }
-            }]
+            nodes: [[0, {spawn: TestSpawn,  spawnInfo: { data: 'test' }}]]
         };
         const instanceMap = await spawnAll(clone, options);
         console.log({instanceMap});

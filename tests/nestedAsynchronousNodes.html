@@ -17,13 +17,13 @@
 
         // Define spawn mapping
         const options = {
-            0: [{
+            [0]: [{
                 spawn: async () => {
                     const { ParentSpawn } = await import('./ParentSpawn.js');
                     return ParentSpawn;
                 },
                 spawnInfo: { role: 'parent' },
-                1: [{
+                [1]: [{
                     spawn: async () => {
                         const { ChildSpawn } = await import('./ChildSpawn.js');
                         return ChildSpawn;
