@@ -33,22 +33,20 @@ interface SSI {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
+    nodes?: NodeSSI[];
 }
 
 /**
- * Mapping for spawning classes to specific nodes and their children
+ * Tuple mapping a node index to its spawn configuration
  */
-interface SpawnMapping extends SSI {
-    // Child node mappings indexed by node position
-    [key: number]: SpawnMapping[];
-}
+type NodeSSI = [number, SSI];
 
 /**
  * Root configuration for spawning
  */
 interface SpawnRoot {
-    // Root node mappings indexed by node position
-    [key: number]: SpawnMapping[];
+    // Array of node mappings as tuples [index, configuration]
+    nodes: NodeSSI[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
 }
 ```
@@ -97,8 +95,8 @@ async function spawnAsynchronous(
 
 ## Function Descriptions
 
-**spawnAll**: The main entry point that orchestrates both synchronous and asynchronous spawning. Returns a promise that resolves to a WeakMap structure mapping elements to their spawned instances and their associated spawn information.
+**spawnAll**: The main entry point that orchestrates both synchronous and asynchronous spawning. Returns a promise that resolves to a WeakMap structure mapping elements to their spawned instances and their associated spawn information. The function merges results from both synchronous and asynchronous spawns.
 
-**spawnSynchronous**: Processes only synchronous spawn constructors from the mapping. Useful when you need to handle sync spawns separately before async operations.
+**spawnSynchronous**: Processes only synchronous spawn constructors from the mapping. Returns a Map (not WeakMap) for tracking instances. Useful when you need to handle sync spawns separately before async operations.
 
-**spawnAsynchronous**: Processes only asynchronous spawn constructors (functions that return Promise<SpawnConstructor>). Useful when you need to handle async spawns separately.
+**spawnAsynchronous**: Processes only asynchronous spawn constructors (functions that return Promise<SpawnConstructor>). Returns a promise that resolves to a Map (not WeakMap) for tracking instances. Useful when you need to handle async spawns separately.
