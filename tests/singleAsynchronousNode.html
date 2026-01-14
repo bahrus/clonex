@@ -16,13 +16,13 @@
 
         // Define spawn mapping
         const options = {
-            0: [{
+            nodes: [[0, {
                 spawn: async () => {
                     const { TestSpawn } = await import('./TestSpawn.js');
                     return TestSpawn;
                 },
                 spawnInfo: { data: 'test' }
-            }]
+            }]]
         };
         const instanceMap = await spawnAll(clone, options);
         console.log({instanceMap});

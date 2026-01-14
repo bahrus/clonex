@@ -128,12 +128,12 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
 /**
  * 
  * @param {DocumentFragment | Element} node 
- * @param {NodeSSI[]} keyToSpawnMappings 
+ * @param {NodeSSI[] | undefined} nodeMappings 
  * @param {ElementXAsynchronousSpawnInfo[]} accumulator
  * @param {SSI | undefined} ssi
  * 
  */
-async function processNodeForAsynchronousSpawns(node, keyToSpawnMappings, accumulator, ssi ){
+async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator, ssi ){
     if(ssi !== undefined && node instanceof Element){
         const {spawn, spawnInfo, initVals} = ssi;
         if(typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction'){
@@ -146,14 +146,13 @@ async function processNodeForAsynchronousSpawns(node, keyToSpawnMappings, accumu
             });
         }
     }
-    for(const key in keyToSpawnMappings){
-        const index = parseInt(key); //is this necessary?
-        const mappings = keyToSpawnMappings[key];
-        const childNode = node.childNodes[index];
-        for(const mapping of mappings){
-            const {ssi, keyToSpawnMappings} = partitionMappings(mapping);
-            await processNodeForAsynchronousSpawns(childNode, keyToSpawnMappings, accumulator, ssi);
-        }
+    if(nodeMappings === undefined) return;
+    for(const nodeMapping of nodeMappings){
+        const [index, ssi] = nodeMapping;
+        const {nodes} = ssi;
+        const childNode = node.children[index];
+        await processNodeForAsynchronousSpawns(childNode, nodes, accumulator, ssi);
+        
     }
 }
 
@@ -176,12 +175,12 @@ function getSynchronousSpawns(clone, options){
  * 
  * @param {DocumentFragment} clone 
  * @param {SpawnRoot} options 
- * @returns {ElementXAsynchronousSpawnInfo[]} 
+ * @returns {Promise<ElementXAsynchronousSpawnInfo[]>} 
  */
 async function getAsynchronousSpawns(clone, options){
     /** @type {ElementXAsynchronousSpawnInfo[]} */
     const accumulator = [];
     const {nodes} = options;
-    //await processNodeForAsynchronousSpawns(clone, nodes, accumulator, undefined);
+    await processNodeForAsynchronousSpawns(clone, nodes, accumulator, undefined);
     return accumulator;
 }
