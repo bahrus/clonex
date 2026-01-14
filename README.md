@@ -1,6 +1,10 @@
 ﻿# spawning
 
-This package contains a utility that spawns class instances tied to a cloned DOM fragment, based on a mapping configuration.
+When instantiating a cloned template repeatedly, a common need is to be able to attach functionality to certain elements with each iteration.  This package assumes that the fastest way to do this associate is based on the "coordinates" of the cloned template (prior to any actual processing of the functionality).  This package provides a formal mechanism for doing this.
+
+It is part of a larger effort to convert declarative custom elements or DOM fragments into an optimized set of instructions that does not compromise on performance.  This means turning "custom attributes" into quiet "enhancements" that need not expose a public API (or can provide an API without expensive DOM Node's that add to the bulk weight due to css styling and other concerns). 
+
+So the focus of this package is to provide utilities  that spawn class instances tied to a cloned DOM fragment, based on a mapping configuration.
 
 ## Type Definitions
 
@@ -9,6 +13,9 @@ The core interfaces are:
 ```TypeScript
 /**
  * Interface for spawn information
+ * At a minimum, this object is required in 
+ * order to guarantee that there is a key that can be used
+ * to locate the class instance.
  */
 interface SpawnInfo {}
 
