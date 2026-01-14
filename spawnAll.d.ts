@@ -1,11 +1,3 @@
-// export interface TreeNode {
-//     children: TreeNode[];
-//     element: Element;
-// }
-
-// export interface RootNode {
-//     children: TreeNode[];
-// }
 
 export interface ElementXSynchronousSpawnInfo {
     element: Element;
@@ -23,45 +15,47 @@ export interface ElementXAsynchronousSpawnInfo {
 
 /**
  * Interface for spawn information
+ * At a minimum, this object is required in 
+ * order to guarantee that there is a key that can be used
+ * to locate the class instance.
  */
-export interface SpawnInfo {}
+interface SpawnInfo {}
 
 /**
  * Constructor for a class that can be spawned
  */
-export interface SpawnConstructor {
+interface SpawnConstructor {
     new (el: Element, info: SpawnInfo, initVals?: unknown): Disposable;
 }
 
 /**
- * Interface for objects with a dispose method
+ * Interface for classes that can be spawned.  Assumed to have a dispose method
+ * (but this package doesn't require or call such a method)
  */
-export interface Disposable {
+interface Disposable {
     dispose(el: Element, info: SpawnInfo): void;
 }
 
-export interface SSI {
+/**
+ * Spawn configuration
+ */
+interface SSI {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
     nodes?: NodeSSI[];
 }
 
-export type NodeSSI = [number, SSI];
-
-// /**
-//  * Mapping for spawning classes to specific nodes and their children
-//  */
-// export interface SpawnMapping extends SSI {
-//     // Child node mappings indexed by node position
-//     [key: number]: SpawnMapping[];
-// }
+/**
+ * Tuple mapping a node index to its spawn configuration
+ */
+type NodeSSI = [number, SSI];
 
 /**
  * Root configuration for spawning
  */
-export interface SpawnRoot {
-    // Root node mappings indexed by node position
+interface SpawnRoot {
+    // Array of node mappings as tuples [index, configuration]
     nodes: NodeSSI[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
 }

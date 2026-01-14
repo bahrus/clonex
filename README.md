@@ -27,14 +27,15 @@ interface SpawnConstructor {
 }
 
 /**
- * Interface for objects with a dispose method
+ * Interface for classes that can be spawned.  Assumed to have a dispose method
+ * (but this package doesn't require or call such a method)
  */
 interface Disposable {
     dispose(el: Element, info: SpawnInfo): void;
 }
 
 /**
- * Common spawn configuration
+ * Spawn configuration
  */
 interface SSI {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
