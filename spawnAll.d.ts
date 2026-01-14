@@ -1,4 +1,7 @@
 
+/**
+ * Internally used interface for tracking spawn information tied to an element
+ */
 export interface ElementXSynchronousSpawnInfo {
     element: Element;
     spawn: SpawnConstructor

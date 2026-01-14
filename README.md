@@ -1,8 +1,8 @@
 ﻿# spawning
 
-When instantiating a cloned template repeatedly, a common need is to be able to attach functionality to certain elements with each iteration.  This package assumes that the fastest way to do this associate is based on the "coordinates" of the cloned template (prior to any actual processing of the functionality).  This package provides a formal mechanism for doing this.
+When instantiating a cloned template repeatedly, a common need is to be able to attach functionality to certain elements with each iteration.  This package assumes that the fastest way to do this association is based on the "coordinates" of the elements within the cloned template (prior to any actual processing of the functionality).  This package provides a formal mechanism for doing this.
 
-It is part of a larger effort to convert declarative custom elements or DOM fragments into an optimized set of instructions that does not compromise on performance.  This means turning "custom attributes" into quiet "enhancements" that need not expose a public API (or can provide an API without expensive DOM Node's that add to the bulk weight due to css styling and other concerns). 
+It is part of a [larger effort](https://github.com/bahrus/x-elm/wiki) to convert declarative custom elements or DOM fragments into an optimized set of instructions that does not compromise on performance.  This means turning "custom attributes" into quiet "enhancements" that need not expose a public API (or can provide an API without expensive DOM Node's that add to the bulk weight due to css styling and other concerns). 
 
 So the focus of this package is to provide utilities  that spawn class instances tied to a cloned DOM fragment, based on a mapping configuration.
 
@@ -17,13 +17,15 @@ The core interfaces are:
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
  */
-interface SpawnInfo {}
+interface SpawnInfo {
+    spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
+}
 
 /**
  * Constructor for a class that can be spawned
  */
-interface SpawnConstructor {
-    new (el: Element, info: SpawnInfo, initVals?: unknown): Disposable;
+interface SpawnConstructor<TSpawnKey = SpawnInfo> {
+    new (el: Element, info: TSpawnKey, initVals?: unknown): Disposable;
 }
 
 /**
@@ -38,7 +40,6 @@ interface Disposable {
  * Spawn configuration
  */
 interface SSI {
-    spawn: SpawnConstructor | (() => Promise<SpawnConstructor>);
     spawnInfo: SpawnInfo;
     initVals?: unknown;
     nodes?: NodeSSI[];
@@ -61,11 +62,13 @@ interface SpawnRoot {
 
 ## Public API
 
+The main exported function is:
+
 ```TypeScript
 const template = document.createElement('template');
-template.innerHTML = String.raw<div>...</div>;
+template.innerHTML = String.raw`<div>...</div>`;
 
-const clone = template.cloneNode(true);
+const clone = template.content.cloneNode(true);
 
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
@@ -77,7 +80,11 @@ async function spawnAll(
     clone: DocumentFragment,
     options: SpawnRoot
 ): Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>;
+```
 
+Additional helper functions are available but not part of the official type definitions:
+
+```TypeScript
 /**
  * Spawns synchronous class instances tied to a cloned DOM fragment
  * @param clone - The cloned DOM fragment
