@@ -49,13 +49,13 @@ export interface SSI {
 
 export type NodeSSI = [number, SSI];
 
-/**
- * Mapping for spawning classes to specific nodes and their children
- */
-export interface SpawnMapping extends SSI {
-    // Child node mappings indexed by node position
-    [key: number]: SpawnMapping[];
-}
+// /**
+//  * Mapping for spawning classes to specific nodes and their children
+//  */
+// export interface SpawnMapping extends SSI {
+//     // Child node mappings indexed by node position
+//     [key: number]: SpawnMapping[];
+// }
 
 /**
  * Root configuration for spawning

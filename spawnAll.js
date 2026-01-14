@@ -3,7 +3,6 @@
  * SpawnRoot, 
  * SpawnInfo, 
  * Disposable, 
- * SpawnMapping, 
  * SpawnConstructor,
  * NodeSSI,
  * ElementXSynchronousSpawnInfo,
