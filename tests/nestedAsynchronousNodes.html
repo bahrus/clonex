@@ -36,7 +36,7 @@
         const instanceMap = await spawnAll(clone, options);
         console.log({instanceMap});
         if(clone.querySelector('div')?.dataset.parent === 'yes' &&
-           clone.querySelector('section')?.textContent === 'Child'){
+           clone.querySelector('span')?.textContent === 'Child'){
             target.setAttribute('mark', 'good');
         }
         root.appendChild(clone);
