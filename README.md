@@ -39,24 +39,28 @@ interface Disposable {
 /**
  * Spawn configuration
  */
-interface SSI {
+interface SIN {
     spawnInfo: SpawnInfo;
     initVals?: unknown;
-    nodes?: NodeSSI[];
+    nodes?: NxSIN[];
 }
 
 /**
  * Tuple mapping a node index to its spawn configuration
  */
-type NodeSSI = [number, SSI];
+type NxSIN = [number, SIN];
 
 /**
  * Root configuration for spawning
  */
 interface SpawnRoot {
     // Array of node mappings as tuples [index, configuration]
-    nodes: NodeSSI[];
+    nodes: NxSIN[];
     spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
+    /**
+     * Optional debounce interval in milliseconds for DOM mutations before returning the instance map
+     */
+    mutationDebounceInterval?: number;
 }
 ```
 
@@ -110,11 +114,27 @@ async function spawnAsynchronous(
 
 ## Function Descriptions
 
-**spawnAll**: The main entry point that orchestrates both synchronous and asynchronous spawning. Returns a promise that resolves to a WeakMap structure mapping elements to their spawned instances and their associated spawn information. The function merges results from both synchronous and asynchronous spawns.
+**spawnAll**: The main entry point that orchestrates both synchronous and asynchronous spawning. Returns a promise that resolves to a WeakMap structure mapping elements to their spawned instances and their associated spawn information. The function merges results from both synchronous and asynchronous spawns. If `mutationDebounceInterval` is specified in the options, the function will wait for DOM mutations to settle before returning, using a MutationObserver to detect changes and debouncing them by the specified interval in milliseconds.
 
 **spawnSynchronous**: Processes only synchronous spawn constructors from the mapping. Returns a Map (not WeakMap) for tracking instances. Useful when you need to handle sync spawns separately before async operations.
 
 **spawnAsynchronous**: Processes only asynchronous spawn constructors (functions that return Promise<SpawnConstructor>). Returns a promise that resolves to a Map (not WeakMap) for tracking instances. Useful when you need to handle async spawns separately.
+
+## Mutation Debouncing
+
+When spawned class instances modify the DOM (e.g., adding attributes, child elements, or other changes), you may want to wait for these mutations to complete before the `spawnAll` function returns. Use the `mutationDebounceInterval` option to specify a debounce interval in milliseconds:
+
+```typescript
+const result = await spawnAll(clone, {
+    nodes: [...],
+    mutationDebounceInterval: 100 // Wait 100ms after last mutation
+});
+```
+
+This uses a MutationObserver to watch for DOM changes and waits for the specified interval of inactivity before resolving. This is particularly useful when:
+- Spawned instances perform asynchronous DOM updates
+- You need to ensure all DOM modifications are complete before proceeding
+- Multiple instances might trigger cascading DOM changes
 
 
 
