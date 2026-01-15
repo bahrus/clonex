@@ -10,6 +10,11 @@
     "spa-ssi": "0.0.26",
     "@playwright/test": "1.57.0"
   },
+  "exports":{
+    "./spawnAll.js": "./spawnAll.js",
+    ".": "./spawnAll.js"
+  },
+  "types": "./types.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bahrus/spawning.git"
