@@ -12,7 +12,8 @@
   },
   "exports":{
     "./spawnAll.js": "./spawnAll.js",
-    ".": "./spawnAll.js"
+    ".": "./spawnAll.js",
+    "./waitForNoMutations.js": "./waitForNoMutations.js"
   },
   "types": "./types.d.ts",
   "repository": {
