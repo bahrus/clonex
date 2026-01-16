@@ -137,5 +137,3 @@ This uses a MutationObserver to watch for DOM changes and waits for the specifie
 - Multiple instances might trigger cascading DOM changes
 
 
-
-[TODO]:  implement spawnCallback, option to wait for DOM changes to settle down.
