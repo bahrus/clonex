@@ -4,7 +4,7 @@ When instantiating a cloned template repeatedly, a common need is to be able to 
 
 It is part of a [larger effort](https://github.com/bahrus/x-elm/wiki) to convert declarative custom elements or DOM fragments into an optimized set of instructions that does not compromise on performance.  This means turning "custom attributes" into quiet "enhancements" that need not expose a public API (or can provide an API without expensive DOM Node's that add to the bulk weight due to css styling and other concerns). 
 
-So the focus of this package is to provide utilities  that spawn class instances tied to a cloned DOM fragment, based on a mapping configuration.
+So the focus of this package is to provide utilities  that spawn class instances and/or invoke functions [TODO] tied to a cloned DOM fragment, based on a mapping configuration.
 
 ## Type Definitions
 
