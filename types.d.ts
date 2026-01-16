@@ -21,8 +21,6 @@ export interface DoSomething<T = unknown> {
  * At a minimum, this object is required in 
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
- * If the rhs is of type DoSomething, no weak reference is kept to the instance
- * so no ability or expectation to call dispose later on.
  */
 export interface SpawnInfo {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>) | DoSomething;
