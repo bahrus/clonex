@@ -54,7 +54,12 @@ export type NxSIN = [number, SIN];
 export interface SpawnRoot {
     // Array of node mappings as tuples [index, configuration]
     nodes: NxSIN[];
-    spawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
+    // Optional callback invoked when an instance is about to be spawned
+    // This provides the opportunity to merge existing data in with initVals
+    preSpawnCallback?: (el: Element, spawnInfo: SpawnInfo, initVals: unknown) => void;
+
+    // Optional callback invoked after an instance has been spawned
+    postSpawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
     /**
      * Optional debounce interval in milliseconds for node change of nodes before returning the instance map
      */
