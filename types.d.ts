@@ -51,12 +51,13 @@ export type NxSIN = [number, SIN];
 /**
  * Root configuration for spawning
  */
-export interface SpawnRoot {
+export interface SpawnOptions {
     // Array of node mappings as tuples [index, configuration]
     nodes: NxSIN[];
     // Optional callback invoked when an instance is about to be spawned
-    // This provides the opportunity to merge existing data in with initVals
-    preSpawnCallback?: (el: Element, spawnInfo: SpawnInfo, initVals: unknown) => void;
+    // This provides the opportunity to merge existing data in with initVals and return 
+    // the merged result
+    preSpawnCallback?: (el: Element, spawnInfo: SpawnInfo, initVals: unknown) => unknown;
 
     // Optional callback invoked after an instance has been spawned
     postSpawnCallback?: (el: Element, instance: Disposable, spawnInfo: SpawnInfo) => void;
@@ -66,13 +67,3 @@ export interface SpawnRoot {
     mutationDebounceInterval?: number;
 }
 
-// /**
-//  * Spawns class instances tied to a cloned DOM fragment based on a mapping
-//  * @param clone - The cloned DOM fragment
-//  * @param options - The spawn mapping and configuration
-//  * @returns A nested WeakMap for tracking instances
-//  */
-// export declare function spawnAll(
-//     clone: DocumentFragment,
-//     options: SpawnRoot
-// ): Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>;

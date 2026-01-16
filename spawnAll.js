@@ -1,10 +1,10 @@
 //@ts-check
-/** @import { SpawnRoot, SpawnInfo, Disposable, SpawnConstructor, NxSIN, ElementXSynchronousSpawnInfo, SIN} from "./types.d.ts" */
+/** @import { SpawnOptions, SpawnInfo, Disposable, SpawnConstructor, NxSIN, ElementXSynchronousSpawnInfo, SIN} from "./types.d.ts" */
 
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
  * @param {DocumentFragment} clone - The cloned DOM fragment
- * @param {SpawnRoot} options - The spawn mapping and configuration
+ * @param {SpawnOptions} options - The spawn mapping and configuration
  * @returns {Promise<WeakMap<Element, WeakMap<SpawnInfo, Disposable>>>} A nested WeakMap for tracking instances
  */
 export async function spawnAll(clone, options) {
@@ -38,7 +38,7 @@ export async function spawnAll(clone, options) {
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
  * @param {DocumentFragment} clone - The cloned DOM fragment
- * @param {SpawnRoot} options - The spawn mapping and configuration
+ * @param {SpawnOptions} options - The spawn mapping and configuration
  * @returns {Map<Element, WeakMap<SpawnInfo, Disposable>>} A nested WeakMap for tracking instances
  */
 export function spawnSynchronous(clone, options) {
@@ -50,7 +50,7 @@ export function spawnSynchronous(clone, options) {
 /**
  * Spawns class instances tied to a cloned DOM fragment based on a mapping
  * @param {DocumentFragment} clone - The cloned DOM fragment
- * @param {SpawnRoot} options - The spawn mapping and configuration
+ * @param {SpawnOptions} options - The spawn mapping and configuration
  * @returns {Promise<Map<Element, WeakMap<SpawnInfo, Disposable>>>} A nested WeakMap for tracking instances
  */
 export async function spawnAsynchronous(clone, options) {
@@ -60,7 +60,7 @@ export async function spawnAsynchronous(clone, options) {
 
 /**
  * 
- * @param {SpawnRoot} options 
+ * @param {SpawnOptions} options 
  * @param {ElementXSynchronousSpawnInfo[]} elementXSpawnInfo 
  * @returns 
  */
@@ -71,10 +71,11 @@ function doSpawns(options, elementXSpawnInfo){
         const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
         //kind of silly, maybe should skip
         const spawnConstructor =  spawn;
+        let initValsFinal = initVals;
         if(preSpawnCallback !== undefined){
-            preSpawnCallback(element, spawnInfo, initVals);
+            initValsFinal = preSpawnCallback(element, spawnInfo, initVals);
         }
-        const instance = new spawnConstructor(element, spawnInfo, initVals);
+        const instance = new spawnConstructor(element, spawnInfo, initValsFinal);
         if(postSpawnCallback !== undefined){
             postSpawnCallback(element, instance, spawnInfo);
         }
@@ -151,7 +152,7 @@ async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator,
 /**
  * 
  * @param {DocumentFragment} clone 
- * @param {SpawnRoot} options 
+ * @param {SpawnOptions} options 
  * @returns {ElementXSynchronousSpawnInfo[]} 
  */
 function getSynchronousSpawns(clone, options){
@@ -165,7 +166,7 @@ function getSynchronousSpawns(clone, options){
 /**
  * 
  * @param {DocumentFragment} clone 
- * @param {SpawnRoot} options 
+ * @param {SpawnOptions} options 
  * @returns {Promise<ElementXSynchronousSpawnInfo[]>} 
  */
 async function getAsynchronousSpawns(clone, options){
