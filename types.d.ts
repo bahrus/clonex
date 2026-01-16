@@ -22,7 +22,7 @@ export interface DoSomething<T = unknown> {
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
  * If the rhs is of type DoSomething, the weak references can be 
- * used for subsequent calls to do something with the element
+ * used for subsequent calls to do something with the element [TODO]
  */
 export interface SpawnInfo {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>) | DoSomething;
