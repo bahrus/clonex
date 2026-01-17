@@ -13,23 +13,23 @@ export async function spawnAll(clone, options) {
 
     // Merge the two WeakMaps
     const elementToInfoMap = new WeakMap();
-    
+
     // Copy synchronous spawns
     for (const [element, infoMap] of spawnedSynchronous.entries()) {
         elementToInfoMap.set(element, infoMap);
     }
-    
+
     // Merge asynchronous spawns
     for (const [element, asyncInfoMap] of spawnedAsynchronous.entries()) {
         elementToInfoMap.set(element, asyncInfoMap);
     }
-    
+
     // If mutationDebounceInterval is specified, wait for DOM mutations to settle
     if (options.mutationDebounceInterval !== undefined && options.mutationDebounceInterval > 0) {
         const { waitForNoMutations } = await import('./waitForNoMutations.js');
         await waitForNoMutations(clone, options.mutationDebounceInterval);
     }
-    
+
     return elementToInfoMap;
 }
 
@@ -44,7 +44,7 @@ export async function spawnAll(clone, options) {
 export function spawnSynchronous(clone, options) {
     const synchronousSpawns = getSynchronousSpawns(clone, options);
     return doSpawns(options, synchronousSpawns);
-    
+
 }
 
 /**
@@ -64,24 +64,40 @@ export async function spawnAsynchronous(clone, options) {
  * @param {ElementXSynchronousSpawnInfo[]} elementXSpawnInfo 
  * @returns 
  */
-function doSpawns(options, elementXSpawnInfo){
+function doSpawns(options, elementXSpawnInfo) {
     const elementToInfoMap = new Map();
-    const {preSpawnCallback, postSpawnCallback} = options;
+    const { preSpawnCallback, postSpawnCallback } = options;
     for (const elXSpawnInfo of elementXSpawnInfo) {
-        const {element, spawnInfo, spawn, initVals} = elXSpawnInfo;
+        const { element, spawnInfo, spawn, initVals } = elXSpawnInfo;
         //kind of silly, maybe should skip
-        const spawnConstructor =  spawn;
+        const spawnConstructor = spawn;
         let initValsFinal = initVals;
-        if(preSpawnCallback !== undefined){
+        if (preSpawnCallback !== undefined) {
             initValsFinal = preSpawnCallback(element, spawnInfo, initVals);
         }
-        const instance = new spawnConstructor(element, spawnInfo, initValsFinal);
-        if(postSpawnCallback !== undefined){
-            postSpawnCallback(element, instance, spawnInfo);
+        switch (typeof spawnConstructor) {
+            case 'object': {
+                if ('do' in spawnConstructor && typeof spawnConstructor.do === 'function') {
+                    spawnConstructor.do(element, spawnInfo, initValsFinal, spawnConstructor.args);
+                } else {
+                    throw 500;
+                }
+                break;
+            }
+            case 'function': {
+                const instance = new spawnConstructor(element, spawnInfo, initValsFinal);
+                if (postSpawnCallback !== undefined) {
+                    postSpawnCallback(element, instance, spawnInfo);
+                }
+                const infoMap = elementToInfoMap.get(element) || new WeakMap();
+                infoMap.set(spawnInfo, instance);
+                elementToInfoMap.set(element, infoMap);
+            }
+            default:
+                throw 500;
         }
-        const infoMap = elementToInfoMap.get(element) || new WeakMap();
-        infoMap.set(spawnInfo, instance);
-        elementToInfoMap.set(element, infoMap);
+
+
     }
     return elementToInfoMap;
 }
@@ -94,11 +110,11 @@ function doSpawns(options, elementXSpawnInfo){
  * @param {SIN | undefined} ssi
  * 
  */
-function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
-    if(ssi !== undefined && node instanceof Element){
-        const {spawnInfo, initVals} = ssi;
-        const {spawn} = spawnInfo;
-        if(typeof spawn === 'function' && spawn.constructor.name !== 'AsyncFunction'){
+function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi) {
+    if (ssi !== undefined && node instanceof Element) {
+        const { spawnInfo, initVals } = ssi;
+        const { spawn } = spawnInfo;
+        if (typeof spawn === 'function' && spawn.constructor.name !== 'AsyncFunction') {
             accumulator.push({
                 element: node,
                 spawn: /** @type {SpawnConstructor} */ (spawn),
@@ -107,10 +123,10 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
             });
         }
     }
-    if(nodeMappings === undefined) return;
-    for(const nodeMapping of nodeMappings){
+    if (nodeMappings === undefined) return;
+    for (const nodeMapping of nodeMappings) {
         const [index, ssi] = nodeMapping;
-        const {nodes} = ssi;
+        const { nodes } = ssi;
         const childNode = node.children[index];
         processNodeForSynchronousSpawns(childNode, nodes, accumulator, ssi);
     }
@@ -124,11 +140,11 @@ function processNodeForSynchronousSpawns(node, nodeMappings, accumulator, ssi ){
  * @param {SIN | undefined} ssi
  * 
  */
-async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator, ssi ){
-    if(ssi !== undefined && node instanceof Element){
-        const {spawnInfo, initVals} = ssi;
-        const {spawn} = spawnInfo;
-        if(typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction'){
+async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator, ssi) {
+    if (ssi !== undefined && node instanceof Element) {
+        const { spawnInfo, initVals } = ssi;
+        const { spawn } = spawnInfo;
+        if (typeof spawn === 'function' && spawn.constructor.name === 'AsyncFunction') {
             const asyncSpawn = await spawn();
             accumulator.push({
                 element: node,
@@ -138,13 +154,13 @@ async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator,
             });
         }
     }
-    if(nodeMappings === undefined) return;
-    for(const nodeMapping of nodeMappings){
+    if (nodeMappings === undefined) return;
+    for (const nodeMapping of nodeMappings) {
         const [index, ssi] = nodeMapping;
-        const {nodes} = ssi;
+        const { nodes } = ssi;
         const childNode = node.children[index];
         await processNodeForAsynchronousSpawns(childNode, nodes, accumulator, ssi);
-        
+
     }
 }
 
@@ -155,10 +171,10 @@ async function processNodeForAsynchronousSpawns(node, nodeMappings, accumulator,
  * @param {SpawnOptions} options 
  * @returns {ElementXSynchronousSpawnInfo[]} 
  */
-function getSynchronousSpawns(clone, options){
+function getSynchronousSpawns(clone, options) {
     /** @type {ElementXSynchronousSpawnInfo[]} */
     const accumulator = [];
-    const {nodes} = options;
+    const { nodes } = options;
     processNodeForSynchronousSpawns(clone, nodes, accumulator, undefined);
     return accumulator;
 }
@@ -169,10 +185,10 @@ function getSynchronousSpawns(clone, options){
  * @param {SpawnOptions} options 
  * @returns {Promise<ElementXSynchronousSpawnInfo[]>} 
  */
-async function getAsynchronousSpawns(clone, options){
+async function getAsynchronousSpawns(clone, options) {
     /** @type {ElementXSynchronousSpawnInfo[]} */
     const accumulator = [];
-    const {nodes} = options;
+    const { nodes } = options;
     await processNodeForAsynchronousSpawns(clone, nodes, accumulator, undefined);
     return accumulator;
 }

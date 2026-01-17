@@ -3,7 +3,7 @@
  */
 export interface ElementXSynchronousSpawnInfo {
     element: Element;
-    spawn: SpawnConstructor
+    spawn: SpawnConstructor | DoSomething;
     spawnInfo: SpawnInfo;
     initVals?: unknown;   
 }
@@ -21,8 +21,7 @@ export interface DoSomething<T = unknown> {
  * At a minimum, this object is required in 
  * order to guarantee that there is a key that can be used
  * to locate the class instance.
- * If the rhs is of type DoSomething, the weak references can be 
- * used for subsequent calls to do something with the element [TODO]
+ * If the rhs is of type DoSomething, no weak reference will be created.
  */
 export interface SpawnInfo {
     spawn: SpawnConstructor | (() => Promise<SpawnConstructor>) | DoSomething;
