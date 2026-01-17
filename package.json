@@ -1,6 +1,6 @@
 {
   "name": "spawning",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "optimal template cloning",
   "homepage": "https://github.com/bahrus/spawning#readme",
   "bugs": {
@@ -10,7 +10,7 @@
     "spa-ssi": "0.0.26",
     "@playwright/test": "1.57.0"
   },
-  "exports":{
+  "exports": {
     "./spawnAll.js": "./spawnAll.js",
     ".": "./spawnAll.js",
     "./waitForNoMutations.js": "./waitForNoMutations.js"
