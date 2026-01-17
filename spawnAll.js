@@ -92,6 +92,7 @@ function doSpawns(options, elementXSpawnInfo) {
                 const infoMap = elementToInfoMap.get(element) || new WeakMap();
                 infoMap.set(spawnInfo, instance);
                 elementToInfoMap.set(element, infoMap);
+                break;
             }
             default:
                 throw 500;
