@@ -1,5 +1,10 @@
 ﻿# spawning
 
+[![NPM version](https://badge.fury.io/js/spawning.png)](http://badge.fury.io/js/spawning)
+[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/spawning?style=for-the-badge)](https://bundlephobia.com/result?p=spawning)
+<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/spawning?compression=gzip">
+[![Playwright Tests](https://github.com/bahrus/spawning/actions/workflows/CI.yml/badge.svg?branch=baseline)](https://github.com/bahrus/spawning/actions/workflows/CI.yml)
+
 When instantiating a cloned template repeatedly, a common need is to be able to attach functionality to certain elements with each iteration.  This package assumes that the fastest way to do this association is based on the numerical "coordinates" of the elements within the cloned template (prior to any actual processing of the functionality).  This package provides a formal mechanism for doing this.
 
 It is part of a [larger effort](https://github.com/bahrus/x-elm/wiki) to convert declarative custom elements or DOM fragments into an optimized set of instructions that does not compromise on performance.  This means turning "custom attributes" into quiet "enhancements" that need not expose a public API (or can provide an API without expensive DOM Node's that add to the bulk weight due to css styling and other concerns). 
@@ -135,5 +140,43 @@ This uses a MutationObserver to watch for DOM changes and waits for the specifie
 - Spawned instances perform asynchronous DOM updates
 - You need to ensure all DOM modifications are complete before proceeding
 - Multiple instances might trigger cascading DOM changes
+
+
+
+## Viewing Demos Locally
+
+Any web server that can serve static files with server side includes will do, but...
+
+1.  Install git.
+2.  Fork/clone this repo.
+3.  Install node.js.
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:8000/ in a modern browser.
+
+## Running Tests
+
+```
+> npm run test
+```
+
+## Using from ESM Module:
+
+```JavaScript
+import {spawnAll} 'spawning/spawnAll.js';
+```
+
+
+
+## Using from CDN:
+
+```html
+<script type=module crossorigin=anonymous>
+    import 'https://esm.run/spawning';
+</script>
+```
+
+
 
 
